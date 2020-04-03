@@ -30,6 +30,13 @@ window.addEventListener("load",()=>{
     canvas.width=w;
     canvas.height=h;
     const c=canvas.getContext("2d");
+    
+     //Audio files
+    var bounce=new Audio();
+    bounce.src="gameAudio/eat.mp3";
+    var go=new Audio();
+    go.src="gameAudio/gameOver.mp3";
+    
     var l=false;
     var r=false
 //keyEvents
@@ -68,6 +75,7 @@ var ball={
 function gameOver(){
     if(paddle.w<60)
  {
+     go.play();
      alert("GAME OVER WELL PLAYED TRY AGAIN YOUR SCORE IS "+score);
      cancelAnimationFrame(game);
  }
@@ -119,6 +127,7 @@ if((ball.x+ball.r>=paddle.x&&ball.y+ball.r>=paddle.y)&&(ball.x+ball.r<=paddle.x+
     ball.dy=-ball.dy;
     paddle.color="white";
     score+=10;
+    bounce.play();
 }
 else{
     paddle.color="brown";
