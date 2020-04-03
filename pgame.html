@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+           
+            margin: 0;
+            padding: 0;
+        }
+        canvas{
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas">
+
+    </canvas>
+</body>
+<script>
+window.addEventListener("load",()=>{
+    const canvas=document.getElementById("canvas");
+    var w=window.innerWidth-10;
+    var h=window.innerHeight-10;
+    var score=0;
+    var game=null;
+    canvas.width=w;
+    canvas.height=h;
+    const c=canvas.getContext("2d");
+    var l=false;
+    var r=false
+//keyEvents
+window.addEventListener("keydown",event=>{
+if(event.keyCode==65)
+{
+    l=true;
+    r=false;
+}
+else if(event.keyCode==68)
+{
+    r=true;
+    l=false;
+}
+
+});
+//paddle
+var paddle={
+
+    x:w/2,
+    y:innerHeight-60,
+    w:260,
+    h:40,
+    l:0,
+    color:"brown"
+};
+//ball
+var ball={
+
+    x:w/2,
+    y:h/2,
+    dx:6,
+    dy:6,
+    r:20
+};
+function gameOver(){
+    if(paddle.w<60)
+ {
+     alert("GAME OVER WELL PLAYED TRY AGAIN YOUR SCORE IS "+score);
+     cancelAnimationFrame(game);
+ }
+}
+function draw()
+{ 
+   c.clearRect(0,0,w,h);
+   c.beginPath();
+   c.fillStyle=paddle.color;
+   c.fillRect(paddle.x,paddle.y,paddle.w,paddle.h);
+   c.strokeStyle="blue";
+  c.strokeRect(paddle.x,paddle.y,paddle.w,paddle.h);
+   c.fill();
+
+   c.fillStyle="white";
+   c.arc(ball.x,ball.y,ball.r,0,Math.PI*2,false);
+   c.fill();
+   ball.x+=ball.dx;
+   ball.y+=ball.dy;
+   paddle.x+=paddle.l;
+   c.font="45px sans-serif";
+   c.fillText("Score : "+score,10,40);
+   
+}
+function update()
+{
+if(l)
+{
+    paddle.l=-4;
+}
+if(r)
+{
+    paddle.l=4;
+}
+if(paddle.x+paddle.w>w)
+{
+    paddle.l=0;
+    paddle.x=w-paddle.w;
+}
+if(paddle.x<0)
+{
+    paddle.x=0;
+    paddle.l=0;
+}
+//ball colliding with paddle
+if((ball.x+ball.r>=paddle.x&&ball.y+ball.r>=paddle.y)&&(ball.x+ball.r<=paddle.x+paddle.w&&ball.y+ball.r>=paddle.y))
+{
+    ball.dx=ball.dx;
+    ball.dy=-ball.dy;
+    paddle.color="white";
+    score+=10;
+}
+else{
+    paddle.color="brown";
+}
+    //Ball colliding with boundary or wall
+    if(ball.x+ball.r>=w||ball.x-ball.r<=0)
+    {
+        ball.dx=-ball.dx;
+    }
+    if(ball.y+ball.r>=h||ball.y-ball.r<=0)
+    {
+        ball.dy=-ball.dy;
+    }
+  if(ball.y+ball.r>=h)
+  {
+      paddle.w-=40;
+  }
+
+}
+    function anim()
+    {
+        c.clearRect(0,0,w,h);
+       
+        update();
+        draw();
+      //  console.log(score);
+       game=requestAnimationFrame(anim);
+       gameOver();
+    }
+
+anim();
+
+});
+</script>
+</html>
